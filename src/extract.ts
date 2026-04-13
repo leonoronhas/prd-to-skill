@@ -37,3 +37,22 @@ export const extractText = async (filePath: string): Promise<string> => {
 
   return text;
 };
+
+const TRUNCATION_PATTERNS = [
+  /[a-z,]\s*$/, // ends mid-word or after a comma
+  /\(\s*e\.g\.\s*,?\s*$/, // ends mid-parenthetical like "(e.g.,"
+  /:\s*$/, // ends with a colon expecting more
+  /\b(and|or|the|a|an|to|for|in|of|with|by|from|as|is|are|was|were|that|this|which|when|where|how|but|if|not|on|at|into|about|than|then|such|each|per|via)\s*$/i,
+];
+
+export const detectTruncation = (text: string): boolean => {
+  const lastLine = text.split("\n").filter(Boolean).pop() ?? "";
+  const trimmed = lastLine.trim();
+
+  if (!trimmed) return false;
+
+  // Doesn't end with sentence-ending punctuation
+  if (!/[.!?:)\]"']$/.test(trimmed)) return true;
+
+  return TRUNCATION_PATTERNS.some((p) => p.test(trimmed));
+};
