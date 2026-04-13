@@ -59,9 +59,9 @@ SUPPORTED TARGETS:
   aider      Aider conventions        → ./CONVENTIONS.md
 
 SUPPORTED PROVIDERS:
-  openai     OPENAI_API_KEY           Default: gpt-4o
-  anthropic  ANTHROPIC_API_KEY        Default: claude-sonnet-4-20250514
-  google     GOOGLE_API_KEY           Default: gemini-2.0-flash
+  openai     OPENAI_API_KEY           Default: gpt-5.4
+  anthropic  ANTHROPIC_API_KEY        Default: claude-sonnet-4-6-20250217
+  google     GOOGLE_API_KEY           Default: gemini-2.5-flash
   mistral    MISTRAL_API_KEY          Default: mistral-large-latest
 
 The provider is auto-detected from whichever API key you have set.
@@ -70,7 +70,7 @@ For provider-specific setup, run:  prd-to-skill help <provider>
 EXAMPLES:
   prd-to-skill ./prd.pdf
   prd-to-skill ./prd.docx --target cursor
-  prd-to-skill ./prd.pdf --provider anthropic --model claude-sonnet-4-20250514
+  prd-to-skill ./prd.pdf --provider anthropic --model claude-sonnet-4-6-20250217
   prd-to-skill ./prd.pdf -n auth-feature -o .claude/commands/auth.md
 `;
 

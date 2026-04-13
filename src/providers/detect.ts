@@ -8,19 +8,19 @@ const providers: Provider[] = [
   {
     name: "anthropic",
     envVar: "ANTHROPIC_API_KEY",
-    defaultModel: "claude-sonnet-4-20250514",
+    defaultModel: "claude-sonnet-4-6-20250217",
     complete: anthropicComplete,
   },
   {
     name: "openai",
     envVar: "OPENAI_API_KEY",
-    defaultModel: "gpt-4o",
+    defaultModel: "gpt-5.4",
     complete: openaiComplete,
   },
   {
     name: "google",
     envVar: "GOOGLE_API_KEY",
-    defaultModel: "gemini-2.0-flash",
+    defaultModel: "gemini-2.5-flash",
     complete: googleComplete,
   },
   {

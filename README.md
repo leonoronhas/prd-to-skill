@@ -39,12 +39,12 @@ Output directories are created automatically if they don't exist.
 
 The tool auto-detects your provider from environment variables (checked in this order):
 
-| Provider  | Env Var             | Default Model              |
-| --------- | ------------------- | -------------------------- |
-| Anthropic | `ANTHROPIC_API_KEY` | `claude-sonnet-4-20250514` |
-| OpenAI    | `OPENAI_API_KEY`    | `gpt-4o`                   |
-| Google    | `GOOGLE_API_KEY`    | `gemini-2.0-flash`         |
-| Mistral   | `MISTRAL_API_KEY`   | `mistral-large-latest`     |
+| Provider  | Env Var             | Default Model                |
+| --------- | ------------------- | ---------------------------- |
+| Anthropic | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6-20250217` |
+| OpenAI    | `OPENAI_API_KEY`    | `gpt-5.4`                    |
+| Google    | `GOOGLE_API_KEY`    | `gemini-2.5-flash`           |
+| Mistral   | `MISTRAL_API_KEY`   | `mistral-large-latest`       |
 
 ## Usage
 
@@ -69,7 +69,7 @@ prd-to-skill <file> [options]
 
 ```bash
 # Use a specific provider and model
-prd-to-skill ./prd.pdf --provider anthropic --model claude-sonnet-4-20250514
+prd-to-skill ./prd.pdf --provider anthropic --model claude-sonnet-4-6-20250217
 
 # Generate a Cursor rule with custom name
 prd-to-skill ./prd.docx --target cursor --name auth-feature

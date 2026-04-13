@@ -25,7 +25,7 @@ program
 program
   .argument("<file>", "Path to PRD file (.pdf or .docx)")
   .option("-p, --provider <name>", "LLM provider: openai | anthropic | google | mistral")
-  .option("-m, --model <model>", "Model name (e.g. gpt-4o, claude-sonnet-4-20250514)")
+  .option("-m, --model <model>", "Model name (e.g. gpt-5.4, claude-sonnet-4-6-20250217)")
   .option("-o, --output <path>", "Output file path (overrides default)")
   .option("-n, --name <name>", "Skill/rule name (default: derived from filename)")
   .option("-d, --description <text>", "Description for frontmatter")
