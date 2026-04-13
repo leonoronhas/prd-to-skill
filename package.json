@@ -1,7 +1,7 @@
 {
   "name": "prd-to-skill",
-  "version": "1.0.3",
-  "description": "Convert PRD documents (PDF/DOCX) into AI coding assistant instruction files",
+  "version": "1.0.4",
+  "description": "Convert PRD documents (PDF/DOCX) into AI coding assistant instruction files for Claude Code, Cursor, Codex, Copilot, Windsurf, and Aider",
   "type": "module",
   "bin": {
     "prd-to-skill": "./dist/index.js"
@@ -28,18 +28,35 @@
   },
   "keywords": [
     "prd",
+    "product-requirements",
     "skill",
     "claude",
     "claude-code",
     "cursor",
+    "cursor-rules",
     "codex",
+    "agents-md",
     "copilot",
+    "copilot-instructions",
     "windsurf",
+    "windsurf-rules",
     "aider",
+    "conventions",
+    "ai-coding",
+    "ai-assistant",
+    "llm",
+    "openai",
+    "anthropic",
+    "gemini",
+    "mistral",
+    "pdf",
+    "docx",
     "markdown",
     "cli",
-    "ai"
+    "developer-tools",
+    "ai-skills"
   ],
+  "homepage": "https://github.com/leonoronhas/prd-to-skill#readme",
   "lint-staged": {
     "*.{ts,js}": [
       "eslint --fix",
