@@ -1,6 +1,6 @@
 {
   "name": "prd-to-skill",
-  "version": "0.1.1",
+  "version": "1.0.1",
   "description": "Convert PRD documents (PDF/DOCX) into AI coding assistant instruction files",
   "type": "module",
   "bin": {
@@ -52,7 +52,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/leosantos/prd-to-skill"
+    "url": "https://github.com/leonoronhas/prd-to-skill"
   },
   "dependencies": {
     "commander": "^14.0.3",
