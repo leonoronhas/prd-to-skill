@@ -50,4 +50,21 @@ describe("buildMessages", () => {
     expect(messages[0].content).toContain("claude");
     expect(messages[0].content).toContain("name: <kebab-case-name>");
   });
+
+  it("adds truncation instructions when truncated flag is true", () => {
+    const messages = buildMessages(
+      "content cut off mid",
+      "my-skill",
+      claude,
+      undefined,
+      true,
+    );
+    expect(messages[0].content).toContain("Incomplete Document");
+    expect(messages[0].content).toContain("Incomplete Sections");
+  });
+
+  it("omits truncation instructions by default", () => {
+    const messages = buildMessages("complete content.", "my-skill", claude);
+    expect(messages[0].content).not.toContain("Incomplete Document");
+  });
 });

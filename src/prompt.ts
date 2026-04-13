@@ -58,14 +58,29 @@ export const buildMessages = (
   name: string,
   target: Target,
   description?: string,
+  truncated = false,
 ): LLMMessage[] => {
-  const systemPrompt = `${BASE_SYSTEM_PROMPT}
+  let systemPrompt = `${BASE_SYSTEM_PROMPT}
 
 ## Output Format (${target.name})
 
 You are generating a file for: ${target.description}
 
 ${target.formatInstructions}`;
+
+  if (truncated) {
+    systemPrompt += `
+
+## Important: Incomplete Document
+
+The provided PRD appears to be truncated — it ends abruptly mid-sentence or mid-section. Handle this as follows:
+- Generate the instruction file based ONLY on the content that is present. Do NOT invent or guess missing requirements.
+- At the very end of the output, add a section:
+
+## Incomplete Sections
+
+Note which sections or topics appear to be cut off or missing based on context clues (e.g., a numbered list that stops, a heading with no content, a sentence that ends mid-thought). List them as bullet points so the user knows what to add.`;
+  }
 
   let userContent = `Here is the PRD content to convert into an AI coding instruction file:\n\n<prd>\n${prdText}\n</prd>\n\nName: ${name}`;
 
