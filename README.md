@@ -9,11 +9,14 @@
 
 It uses AI to intelligently extract only the implementation-relevant parts of your PRD (requirements, architecture, business rules, acceptance criteria) and discards project management noise (timelines, stakeholders, budgets). The output is a structured, actionable instruction file that your AI coding tool can use immediately.
 
+Need granular control? The `split` command breaks one PRD into multiple focused skill files — one per topic — so you can load only the skills relevant to your current task.
+
 ## Why prd-to-skill?
 
 - **Save hours of manual work** — stop copy-pasting PRD sections into markdown files by hand
 - **Works with every major AI coding tool** — one CLI covers Claude Code skills, Cursor rules, Codex AGENTS.md, Copilot instructions, Windsurf rules, and Aider conventions
 - **AI-powered extraction** — doesn't just dump raw text; intelligently transforms requirements into actionable instructions with code examples, decision criteria, and verification checklists
+- **Split into focused skills** — generate multiple targeted skill files from one PRD (tech stack, business rules, architecture, etc.) and load only what's relevant
 - **Bring your own LLM** — works with OpenAI, Anthropic, Google Gemini, and Mistral with zero SDK dependencies
 - **Smart edge case handling** — detects truncated documents and incomplete LLM output, warns you, and suggests fixes
 - **Zero config** — just set an API key and run `npx prd-to-skill ./prd.pdf`
@@ -24,8 +27,11 @@ It uses AI to intelligently extract only the implementation-relevant parts of yo
 # Set any supported API key
 export OPENAI_API_KEY="sk-..."
 
-# Generate a Claude Code skill (default)
+# Generate a single Claude Code skill (default)
 npx prd-to-skill ./my-feature-prd.pdf
+
+# Split into multiple focused skills (tech stack, business rules, architecture, etc.)
+npx prd-to-skill split ./my-feature-prd.pdf
 
 # Generate a Cursor rule
 npx prd-to-skill ./my-feature-prd.pdf --target cursor
@@ -90,6 +96,7 @@ prd-to-skill <file> [options]
 
 | Command                        | Description                                             |
 | ------------------------------ | ------------------------------------------------------- |
+| `prd-to-skill split <file>`    | Split PRD into multiple focused skill files             |
 | `prd-to-skill help`            | Detailed help with all targets, providers, and examples |
 | `prd-to-skill help <provider>` | Setup guide with docs link for a specific provider      |
 
@@ -112,7 +119,79 @@ prd-to-skill ./prd.pdf --output .claude/commands/auth.md
 prd-to-skill ./prd.pdf --max-tokens 8192
 ```
 
+## Splitting a PRD into Multiple Skills
+
+The `split` command analyzes your PRD with AI and automatically determines the right set of focused skill files to generate — one per topic area.
+
+```bash
+prd-to-skill split ./my-feature-prd.pdf
+```
+
+### What it generates
+
+Given a PRD, the LLM identifies the relevant categories (e.g. 3-7 depending on the document) and generates a separate skill file for each. Common categories include:
+
+| Category                  | What it covers                                                     |
+| ------------------------- | ------------------------------------------------------------------ |
+| `tech-stack`              | Frameworks, libraries, dependencies, version constraints           |
+| `business-rules`          | Domain logic, validation rules, edge cases                         |
+| `architecture`            | File structure, component organization, naming conventions         |
+| `functional-requirements` | Core features, user flows, expected behaviors, acceptance criteria |
+| `ui-ux`                   | Layout, interaction patterns, responsive behavior                  |
+| `api-contracts`           | Endpoints, request/response shapes, authentication                 |
+| `data-models`             | Schemas, data structures, relationships                            |
+
+The categories are determined per-PRD — only topics with sufficient content are generated.
+
+### Output files
+
+All files are written to the same directory as the single-file command (e.g. `.claude/commands/` for Claude Code):
+
+```
+.claude/commands/
+  my-feature-tech-stack.md
+  my-feature-business-rules.md
+  my-feature-architecture.md
+  my-feature-functional-requirements.md
+  my-feature-index.md          ← index listing all skills with descriptions
+```
+
+### Split command options
+
+```bash
+prd-to-skill split <file> [options]
+```
+
+| Flag                    | Description                                              | Default               |
+| ----------------------- | -------------------------------------------------------- | --------------------- |
+| `-t, --target <target>` | Target tool: `claude`, `cursor`, `copilot`, `windsurf`   | `claude`              |
+| `-p, --provider <name>` | LLM provider: `openai`, `anthropic`, `google`, `mistral` | Auto-detected         |
+| `-m, --model <model>`   | Model name                                               | Provider default      |
+| `-n, --name <name>`     | Base name for generated files                            | Derived from filename |
+| `--max-tokens <number>` | Max output tokens per skill file                         | `4096`                |
+| `-v, --verbose`         | Show extraction and API details                          |                       |
+
+> **Note:** `codex` and `aider` targets are not supported for `split` because they use fixed output filenames (`AGENTS.md` / `CONVENTIONS.md`). Use the default command for those targets.
+
+### Split examples
+
+```bash
+# Split a PRD into focused Claude Code skills
+prd-to-skill split ./prd.pdf
+
+# Split into Cursor rules
+prd-to-skill split ./prd.pdf --target cursor
+
+# Use a specific provider and model
+prd-to-skill split ./prd.pdf --provider anthropic --model claude-opus-4-6
+
+# Custom base name for output files
+prd-to-skill split ./prd.pdf --name auth-feature
+```
+
 ## How It Works
+
+### Default command
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -127,6 +206,22 @@ prd-to-skill ./prd.pdf --max-tokens 8192
 4. **Generates with AI** — sends to your chosen LLM with a target-specific prompt that produces the correct file format
 5. **Validates output** — detects if the LLM output was cut off and suggests fixes (increase `--max-tokens`, use a larger model, or split the PRD)
 6. **Writes the file** to the right directory for your chosen tool
+
+### Split command
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌─────────────────────┐     ┌───────────────┐
+│  PDF / DOCX  │────▶│   Extract    │────▶│  Plan Call   │────▶│  Parallel LLM Calls │────▶│  Write Files  │
+│   (input)    │     │    Text      │     │  (identify   │     │  (one per category) │     │  + Index File │
+└──────────────┘     └──────────────┘     │  categories) │     └─────────────────────┘     └───────────────┘
+                                          └──────────────┘
+```
+
+1. **Extracts text** from your PDF or Word document
+2. **Plans categories** — makes one LLM call to analyze the PRD and identify 3-7 relevant skill categories
+3. **Generates skills in parallel** — sends one LLM call per category, each focused on only that topic
+4. **Writes skill files** — one file per category, all in the target tool's directory
+5. **Writes an index file** — a summary listing every generated skill with descriptions and links
 
 ## Common Use Cases
 
