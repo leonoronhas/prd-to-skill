@@ -1,6 +1,6 @@
 {
   "name": "prd-to-skill",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Convert PRD documents (PDF/DOCX) into AI coding assistant instruction files for Claude Code, Cursor, Codex, Copilot, Windsurf, and Aider",
   "type": "module",
   "bin": {
