@@ -3,7 +3,12 @@
 import { Command } from "commander";
 import { generate } from "./generate.js";
 import { printHelp } from "./help.js";
+import { split, SPLIT_UNSUPPORTED_TARGETS } from "./split.js";
 import { TARGET_NAMES } from "./targets.js";
+
+const SPLIT_SUPPORTED_TARGETS = TARGET_NAMES.filter(
+  (t) => !SPLIT_UNSUPPORTED_TARGETS.includes(t),
+);
 
 const program = new Command();
 
@@ -20,6 +25,41 @@ program
   .description("Show detailed help, or setup guide for a specific provider")
   .action((provider?: string) => {
     printHelp(provider);
+  });
+
+program
+  .command("split <file>")
+  .description(
+    "Split a PRD into multiple focused skill files, one per topic (tech stack, business rules, etc.)",
+  )
+  .option("-p, --provider <name>", "LLM provider: openai | anthropic | google | mistral")
+  .option("-m, --model <model>", "Model name (e.g. gpt-5.4, claude-sonnet-4-6-20250217)")
+  .option(
+    "-n, --name <name>",
+    "Base name for generated files (default: derived from filename)",
+  )
+  .option(
+    `-t, --target <target>`,
+    `Target tool: ${SPLIT_SUPPORTED_TARGETS.join(", ")}`,
+    "claude",
+  )
+  .option("--max-tokens <number>", "Max output tokens per skill file", "4096")
+  .option("-v, --verbose", "Show extraction and API details")
+  .action(async (file: string, opts) => {
+    try {
+      await split({
+        filePath: file,
+        provider: opts.provider,
+        model: opts.model,
+        name: opts.name,
+        target: opts.target,
+        maxTokens: parseInt(opts.maxTokens, 10),
+        verbose: opts.verbose ?? false,
+      });
+    } catch (err) {
+      console.error(`Error: ${(err as Error).message}`);
+      process.exit(1);
+    }
   });
 
 program
