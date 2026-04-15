@@ -20,7 +20,7 @@ export interface SplitOptions {
   verbose: boolean;
 }
 
-const parseSkillPlan = (raw: string): SkillPlan[] => {
+export const parseSkillPlan = (raw: string): SkillPlan[] => {
   const cleaned = raw
     .replace(/^```(?:json)?\n?/m, "")
     .replace(/\n?```$/m, "")
@@ -40,7 +40,7 @@ const parseSkillPlan = (raw: string): SkillPlan[] => {
   });
 };
 
-const buildIndexContent = (
+export const buildIndexContent = (
   prdName: string,
   skills: SkillPlan[],
   target: Target,
